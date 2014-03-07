@@ -18,13 +18,19 @@
    },
    "type":"privileged",
    "permissions":{
+      "desktop-notification":{},
       "geolocation":{
          "description":"Marking out user location"
       },
       "contacts":{
          "access":"readwrite",
          "description":"testing"
-      }
+      },
+      "push": {"description": "Every day we want to ask you how your day was."}
    },
+   "messages": [
+    {"push": "/view_to_launch.html"},
+    {"push-register": "/view_to_launch.html"}
+  ],
    "pkgName":"com.blackfish.howwasyourday"
 }

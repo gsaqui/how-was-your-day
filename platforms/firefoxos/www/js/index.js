@@ -36,6 +36,7 @@ var app = {
         console.log("initializing...");
         this.bindEvents();
         this.initFirstScreen();
+        this.setupAppRegistrations();
     },
     // Bind Event Listeners
     //
@@ -115,13 +116,75 @@ var app = {
         if(length > 0){
             updatedValue = app.data.status[length-1].betterThanYesterday;
         }
-        console.log(app.data.status.length, updatedValue)
+        
         var day = {
             date: new Date().getTime(),
             betterThanYesterday: updatedValue + betterThanYesterday
         }
-        app.data.status.push(day)
+        app.data.status.push(day);
     },
+
+    setupAppRegistrations:function () {
+             // Issue a register() call
+             // to register to listen for a notification,
+             // you simply call push.register
+             // Here, we'll register a channel for "email" updates.
+             // Channels can be for anything the app would like to get notifications for.
+             var reqEmail = navigator.push.register();
+             reqEmail.onsuccess = function(e) {
+               emailEndpoint = e.target.result;
+               //storeOnAppServer("email", emailEndpoint); // This is the "Hand wavey" way that the App 
+               console.log('hello 2', emailEndpoint);
+                                                            // sends the endPoint back to the AppServer
+             }
+
+             // Once we've registered, the AppServer can send version pings to the EndPoint.
+            // This will trigger a 'push' message to be sent to this handler.
+            navigator.mozSetMessageHandler('push', function(message) {
+                console.log('we have received a message', new Date().getTime(),  message)
+
+
+                //http://chrislord.net/index.php/2013/05/04/writing-and-deploying-a-small-firefox-os-application/
+            var notification = new Notification("Hi there!");
+    
+    });
+  }
+
+  // At last, if the user already denied any notification, and you 
+  // want to be respectful there is no need to bother him any more.
+
+
+
+
+
+                /*
+                function onPrompt(results) {
+                    alert("You selected button number " + results.buttonIndex + " and entered " + results.input1);
+                }
+                //navigator.notification.vibrate(500);
+                navigator.notification.prompt(
+                    'Enter Name', // message
+                    onPrompt, // callback to invoke
+                    'Prompt Test', // title
+                    ['Ok', 'Exit'], // buttonLabels
+                    'Doe, Jane' // defaultText
+                );
+*/
+                //if (message.pushEndpoint == emailEndpoint)   // Yay! New Email! Steve and blue can dance!
+                  //getNewEmailMessagesFromAppServer(message.version);
+                
+              });
+            navigator.mozSetMessageHandler('push-register', function(e) {
+                var reqEmail = navigator.push.register();
+                 reqEmail.onsuccess = function(e) {
+                   emailEndpoint = e.target.result;
+                   //storeOnAppServer("email", emailEndpoint); // This is the "Hand wavey" way that the App 
+                   console.log('hello 2', emailEndpoint);
+                                                                // sends the endPoint back to the AppServer
+                 }
+          });
+    },
+
 
 
 
@@ -171,6 +234,9 @@ var app = {
         }
 
         
+
+
+
         // The "back" button will appear in the header on the demo
         // pages. Make it flip back to the navigation and clear any
         // events when touched.
