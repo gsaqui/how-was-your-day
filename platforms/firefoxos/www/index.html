@@ -28,7 +28,7 @@
     <link rel="stylesheet" type="text/css" href="css/notification.css" />
 	<link rel="stylesheet" type="text/css" href="css/leaflet.css">
     
-    <title>Firefox OS - Cordova Test App</title>
+    <title>Firefox OS - How was your day?</title>
 
   </head>
   <body>
@@ -36,10 +36,10 @@
       <header>
         <x-appbar>
           <button class="back">back</button>
-          <header>Cordova &lt;3 Firefox OS</header>
+          <header>How was your day?</header>
         </x-appbar>
       </header>
-      <section>
+      <section id="initial-setup">
         <x-flipbox>
           <div>
             <div id="deviceready" class="blink">
@@ -47,19 +47,61 @@
               <p class="event received">Device is Ready</p>
             </div>
 
-            <button id="getPicture">Get Picture</button>
-            <div id="addcontact"><button id="runPro">Prompt/Vibrate</button></div>
-            <button id="getAccel">Display Accelerometer</button>
-            <button id="runAccel">Run Device Motion</button>
-            <button id="runGeo">Geolocation</button>
-            <button id="runCompass">Compass</button>
-            <button id="addNewContact">Add Contact</button>
+            <button class="createUser">Create Account</button>
+            <button class="login">Login</button>
+            
+          </div>
+          <div></div>
+        </x-flipbox>
+      </section>
+      <section id="login">
+        <x-flipbox>
+          <div>
+            <label for="email-address">Email:</label>
+            <input name="email-address" type="email"/>
+
+            <label for="password">Password:</label> 
+            <input name="password" class="password" type="password"/>
+            <button type="submit">Login</button>
+          </div>
+
+          <div></div>
+        </x-flipbox>
+      </section>
+      <section id="createUser">
+        <x-flipbox>
+          <div>
+            <div class="field">
+              Name: <input type="text" class="name">
+            </div>
+            <div class="field">
+              E-mail: <input type="email" class="email-address">
+            </div>
+            <div class="field">
+              Password: <input type="password" class="password">
+            </div>
+            <button class="save">Save</button>
+                
+          </div>
+          <div></div>
+        </x-flipbox>
+      </section>
+      <section id="howWasYourDay">
+        <x-flipbox>
+          <div>
+            <h2>Was today better than yesterday day?</h2>
+            <div class="field">              
+              <button id="yes" data-value="1">Yes</button>
+            </div>
+            <div class="field">
+              <button id="no" data-value="-1">No</button>
+            </div>
           </div>
           <div></div>
         </x-flipbox>
       </section>
     </x-layout>
-
+      
  
     <div class="contactForm">
       <div class="field">
@@ -76,8 +118,8 @@
 
     <script type="text/javascript" src="js/brick-0.10.0.min.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
-    <script type="text/javascript" src="js/three.min.js"></script>
-    <script type="text/javascript" src="js/globe.js"></script>
+    <script type="text/javascript" src="js/jquery.1.11.min.js"></script>
+    <script type="text/javascript" src="js/localforage.min.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
   </body>
 </html>

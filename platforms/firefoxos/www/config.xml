@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="io.cordova.hellocordova" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>CordovaDemo</name>
+    <name>HowWasYourDay</name>
     <description>
-        A sample Apache Cordova application that responds to the deviceready event.
+        A very simple app that asks how your day was.  It will track over time if it's been a a good week or month compared to the last one.
     </description>
-    <author email="dev@cordova.apache.org" href="http://cordova.io">
-        Apache Cordova Team
+    <author email="glenn.saqui@gmail.com">
+        Glenn Saqui
     </author>
     <content src="index.html" />
     <access origin="*" />
