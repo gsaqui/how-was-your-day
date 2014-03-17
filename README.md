@@ -1,4 +1,5 @@
 __How was your day__
+
 This is a very simple firefox os app that asks you everyday how your day was.  The client is created with phonegap as I would like to work towards to generating code for both ios and android.
 
 __TODO__
