@@ -125,6 +125,7 @@ var app = {
     },
 
     setupAppRegistrations:function () {
+
              // Issue a register() call
              // to register to listen for a notification,
              // you simply call push.register
@@ -134,7 +135,7 @@ var app = {
              reqEmail.onsuccess = function(e) {
                emailEndpoint = e.target.result;
                //storeOnAppServer("email", emailEndpoint); // This is the "Hand wavey" way that the App 
-               console.log('hello 2', emailEndpoint);
+               console.log('end point we want to curl to', emailEndpoint);
                                                             // sends the endPoint back to the AppServer
              }
 
@@ -145,17 +146,20 @@ var app = {
 
 
                 //http://chrislord.net/index.php/2013/05/04/writing-and-deploying-a-small-firefox-os-application/
-            var notification = new Notification("Hi there!");
-    
-    });
-  }
+                //https://developer.mozilla.org/en/docs/Web/API/notification
+                var notification = new Notification("Hi there!");
+                notification.onclick = function () {
+                    navigator.mozApps.getSelf().onsuccess = function(evt) {
+                        var app = evt.target.result;
+                        app.launch();
+                    };
+                };
+                notification.show();
+            });
+  },
 
   // At last, if the user already denied any notification, and you 
   // want to be respectful there is no need to bother him any more.
-
-
-
-
 
                 /*
                 function onPrompt(results) {
@@ -170,20 +174,6 @@ var app = {
                     'Doe, Jane' // defaultText
                 );
 */
-                //if (message.pushEndpoint == emailEndpoint)   // Yay! New Email! Steve and blue can dance!
-                  //getNewEmailMessagesFromAppServer(message.version);
-                
-              });
-            navigator.mozSetMessageHandler('push-register', function(e) {
-                var reqEmail = navigator.push.register();
-                 reqEmail.onsuccess = function(e) {
-                   emailEndpoint = e.target.result;
-                   //storeOnAppServer("email", emailEndpoint); // This is the "Hand wavey" way that the App 
-                   console.log('hello 2', emailEndpoint);
-                                                                // sends the endPoint back to the AppServer
-                 }
-          });
-    },
 
 
 
