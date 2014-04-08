@@ -53,17 +53,60 @@ var app = {
         app.receivedEvent('deviceready');
         window.screen.mozLockOrientation('portrait-primary');
     },
+
+    showHowWasYourDay: function(){
+        $('#initial-setup').hide();
+        $('#login').hide();
+        $('#createUser').hide();
+
+        app.isThereAnyEntryForToday( app.currentTime()) 
+
+        
+    },
+
+    currentTime: function(){
+        var tempTime = moment()
+        return moment(new Date(tempTime.year(), tempTime.month(), tempTime.date()));
+    },
+
+    isThereAnyEntryForToday: function(date){
+        return localforage.getItem('app', function(data){
+            console.log('app returned', data)
+            if(data === undefined || data === null){
+                console.log('app has nothing stored for this user')
+                return;
+            }
+            var days = JSON.parse(data).data.status;
+            
+            _.each(days, function(day){
+                
+                if(moment(day.date).isSame(date, 'day')){
+                
+                    $('#alreadyFilledInToday').show();
+                    return true;
+                } else {
+                    $('#howWasYourDay').show();
+                    return false;
+                }
+            })
+        })
+    },
+
     //Check to see if the user exists or not
     initFirstScreen: function(){
         localforage.getItem('user', function(user){
+            console.log('user is ', user);
             if(user){
                 $('#initial-setup').hide();
                 $('#login').hide();
                 $('#createUser').hide();
-                $('#howWasYourDay').show();
+                $('#howWasYourDay').hide();
+                $('#alreadyFilledInToday').hide();
+                app.showHowWasYourDay();
             } else {
                 $('#login').hide();
                 $('#createUser').hide();
+                $('#howWasYourDay').hide();
             }
             
             $('#initial-setup .createUser').click(function(e){       
@@ -116,12 +159,14 @@ var app = {
         if(length > 0){
             updatedValue = app.data.status[length-1].betterThanYesterday;
         }
-        
+
         var day = {
             date: new Date().getTime(),
             betterThanYesterday: updatedValue + betterThanYesterday
         }
-        app.data.status.push(day);
+        app.data.status.push(day);        
+        console.log('data is', app.data.status)
+        localforage.setItem('app', JSON.stringify(app)).then(function(){console.log('data has been set')})
     },
 
     setupAppRegistrations:function () {
@@ -131,49 +176,38 @@ var app = {
              // you simply call push.register
              // Here, we'll register a channel for "email" updates.
              // Channels can be for anything the app would like to get notifications for.
-             var reqEmail = navigator.push.register();
-             reqEmail.onsuccess = function(e) {
-               emailEndpoint = e.target.result;
-               //storeOnAppServer("email", emailEndpoint); // This is the "Hand wavey" way that the App 
-               console.log('end point we want to curl to', emailEndpoint);
-                                                            // sends the endPoint back to the AppServer
-             }
 
-             // Once we've registered, the AppServer can send version pings to the EndPoint.
-            // This will trigger a 'push' message to be sent to this handler.
-            navigator.mozSetMessageHandler('push', function(message) {
-                console.log('we have received a message', new Date().getTime(),  message)
+             if(navigator.push !== undefined){
+                var reqEmail = navigator.push.register();
+                 reqEmail.onsuccess = function(e) {
+                   emailEndpoint = e.target.result;
+                   //storeOnAppServer("email", emailEndpoint); // This is the "Hand wavey" way that the App 
+                   console.log('end point we want to curl to', emailEndpoint);
+                                                                // sends the endPoint back to the AppServer
+                 }
+
+                 // Once we've registered, the AppServer can send version pings to the EndPoint.
+                // This will trigger a 'push' message to be sent to this handler.
+                navigator.mozSetMessageHandler('push', function(message) {
+                    console.log('we have received a message', new Date().getTime(),  message)
 
 
-                //http://chrislord.net/index.php/2013/05/04/writing-and-deploying-a-small-firefox-os-application/
-                //https://developer.mozilla.org/en/docs/Web/API/notification
-                var notification = new Notification("Hi there!");
-                notification.onclick = function () {
-                    navigator.mozApps.getSelf().onsuccess = function(evt) {
-                        var app = evt.target.result;
-                        app.launch();
+                    //http://chrislord.net/index.php/2013/05/04/writing-and-deploying-a-small-firefox-os-application/
+                    //https://developer.mozilla.org/en/docs/Web/API/notification
+                    var notification = new Notification("How was your day?");
+                    notification.onclick = function () {
+                        navigator.mozApps.getSelf().onsuccess = function(evt) {
+                            var app = evt.target.result;
+                            app.launch();
+                            
+                        };
                     };
-                };
-                notification.show();
-            });
-  },
+                    notification.show();
+                });
+                
+             }
+    },
 
-  // At last, if the user already denied any notification, and you 
-  // want to be respectful there is no need to bother him any more.
-
-                /*
-                function onPrompt(results) {
-                    alert("You selected button number " + results.buttonIndex + " and entered " + results.input1);
-                }
-                //navigator.notification.vibrate(500);
-                navigator.notification.prompt(
-                    'Enter Name', // message
-                    onPrompt, // callback to invoke
-                    'Prompt Test', // title
-                    ['Ok', 'Exit'], // buttonLabels
-                    'Doe, Jane' // defaultText
-                );
-*/
 
 
 
